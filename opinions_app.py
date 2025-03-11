@@ -2,6 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+# Для абсолютного адреса в ОС Unix/Mac.
+# sqlite:////username/dev/what_to_watch/db.sqlite3
 
 db = SQLAlchemy(app)
 
