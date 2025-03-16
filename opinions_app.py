@@ -1,7 +1,7 @@
 from datetime import datetime
 from random import randrange
 
-from flask import Flask, flash, redirect, render_template, url_for
+from flask import Flask, abort, flash, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, URLField
@@ -46,7 +46,7 @@ def index_view():
     quantity = Opinion.query.count()
 
     if not quantity:
-        return 'В базе данных мнений о фильмах нет.'
+        abort(500)
     offset_value = randrange(quantity)
     opinion = Opinion.query.offset(offset_value).first()
 
@@ -76,6 +76,17 @@ def add_opinion_view():
 def opinion_view(id):
     opinion = Opinion.query.get_or_404(id)
     return render_template('opinion.html', opinion=opinion)
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
