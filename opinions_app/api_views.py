@@ -4,12 +4,6 @@ from . import app
 from .models import Opinion
 
 
-@app.route('/api/opinions/<int:id>/', methods=['GET'])
-def get_opinion(id):
-    opinion = Opinion.query.get_or_404(id)
-    return jsonify({'opinion': opinion}), 200
-
-
 def opinion_to_dict(opinion):
     return dict(
         id=opinion.id,
@@ -19,3 +13,10 @@ def opinion_to_dict(opinion):
         timestamp=opinion.timestamp,
         added_by=opinion.added_by
     )
+
+
+@app.route('/api/opinions/<int:id>/', methods=['GET'])
+def get_opinion(id):
+    opinion = Opinion.query.get_or_404(id)
+    data = opinion_to_dict(opinion)
+    return jsonify({'opinion': data}), 200
