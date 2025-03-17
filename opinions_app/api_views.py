@@ -28,3 +28,10 @@ def delete_opinion(id):
     db.session.delete(opinion)
     db.session.commit()
     return '', 204
+
+
+@app.route('/api/opinions/', methods=['GET'])
+def get_opinions():
+    opinions = Opinion.query.all()
+    opinions_list = [opinion.to_dict() for opinion in opinions]
+    return jsonify({'opinions': opinions_list}), 200
