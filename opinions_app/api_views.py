@@ -47,6 +47,8 @@ def add_opinion():
         return jsonify({'error': 'The request body is empty'}), 400
     if 'title' not in data or 'text' not in data:
         return jsonify({'error': 'The required fields are missing'}), 400
+    if Opinion.query.filter_by(text=data['text']).first() is not None:
+        return jsonify({'error': 'This opinion already exists'}), 400
     opinion = Opinion()
     opinion.from_dict(data)
     db.session.add(opinion)
