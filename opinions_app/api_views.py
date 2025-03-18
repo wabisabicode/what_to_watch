@@ -42,7 +42,11 @@ def get_opinions():
 
 @app.route('/api/opinions/', methods=['POST'])
 def add_opinion():
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({'error': 'The request body is empty'}), 400
+    if 'title' not in data or 'text' not in data:
+        return jsonify({'error': 'The required fields are missing'}), 400
     opinion = Opinion()
     opinion.from_dict(data)
     db.session.add(opinion)
