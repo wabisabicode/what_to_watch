@@ -4,6 +4,7 @@ from random import randrange
 
 from . import app, db
 from .models import Opinion
+from .views import random_opinion
 
 
 @app.route('/api/opinions/<int:id>/', methods=['GET'])
@@ -51,8 +52,5 @@ def add_opinion():
 
 @app.route('/api/get-random-opinion/', methods=['GET'])
 def get_random_opinion():
-    quantity = Opinion.query.count()
-    if quantity:
-        offset_value = randrange(quantity)
-        opinion = Opinion.query.offset(offset_value).first()
-        return jsonify({'opinion': opinion.to_dict()}), 200
+    opinion = random_opinion()
+    return jsonify({'opinion': opinion.to_dict()}), 200
